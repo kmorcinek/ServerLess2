@@ -15,6 +15,7 @@ namespace DevWar2
         [FunctionName("CreateEntry")]
         public static IActionResult Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]HttpRequest req,
+            [Table("Orders", Connection = "StorageConnection")]ICollector<PhotoOrder> ordersTable,
             TraceWriter log)
         {
             log.Info("C# HTTP trigger function processed a request.");
@@ -23,9 +24,9 @@ namespace DevWar2
             {
                 string requestBody = new StreamReader(req.Body).ReadToEnd();
                 PhotoOrder orderData = JsonConvert.DeserializeObject<PhotoOrder>(requestBody);
-                //orderData.PartitionKey = System.DateTime.UtcNow.DayOfYear.ToString();
-                //orderData.RowKey = orderData.FileName;
-                //ordersTable.Add(orderData);
+                orderData.PartitionKey = System.DateTime.UtcNow.DayOfYear.ToString();
+                orderData.RowKey = orderData.FileName;
+                ordersTable.Add(orderData);
 
                 return (ActionResult)new OkObjectResult($"Order processed: {orderData.FileName}");
             }
