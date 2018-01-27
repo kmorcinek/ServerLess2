@@ -27,26 +27,14 @@ namespace DevWar2
                 orderData.PartitionKey = System.DateTime.UtcNow.DayOfYear.ToString();
                 orderData.RowKey = orderData.FileName;
                 ordersTable.Add(orderData);
-
-                return (ActionResult)new OkObjectResult($"Order processed: {orderData.FileName}");
             }
             catch (System.Exception ex)
             {
-                //log.Error("Something went wrong", ex);
+                log.Error("Something went wrong", ex);
                 return new BadRequestObjectResult("Something went wrong");
             }
 
             return (ActionResult)new OkObjectResult($"Order processed");
-
-            //string name = req.Query["name"];
-
-            //string requestBody = new StreamReader(req.Body).ReadToEnd();
-            //dynamic data = JsonConvert.DeserializeObject(requestBody);
-            //name = name ?? data?.name;
-
-            //return name != null
-            //    ? (ActionResult)new OkObjectResult($"Hello, {name}")
-            //    : new BadRequestObjectResult("Please pass a name on the query string or in the request body");
         }
     }
 
