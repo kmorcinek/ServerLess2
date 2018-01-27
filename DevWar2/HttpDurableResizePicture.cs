@@ -45,6 +45,8 @@ namespace DevWar2
             [Blob("resized-photos/{rand-guid}", FileAccess.ReadWrite, Connection = "StorageConnection")]ICloudBlob resizedPhotoCloudBlob,
             TraceWriter log)
         {
+            log.Info("inside [FunctionName(HttpDurableResizePicture_ResizePicture)]");
+
             var photoStream = await GetSourcePhotoStream(photosContainer, pictureResizeRequest.FileName);
             SetAttachmentAsContentDisposition(resizedPhotoCloudBlob, pictureResizeRequest);
 
@@ -71,6 +73,7 @@ namespace DevWar2
             string jsonContent = await content.ReadAsStringAsync();
             dynamic pictureResizeRequests = JsonConvert.DeserializeObject<PictureResizeRequest[]>(jsonContent);
 
+            log.Info("Before string instanceId = await starter.StartNewAsync(HttpDurableResizePicture, pictureResizeRequests);");
             string instanceId = await starter.StartNewAsync("HttpDurableResizePicture", pictureResizeRequests);
 
             return starter.CreateCheckStatusResponse(req, instanceId);
