@@ -63,7 +63,7 @@ namespace FaceSender
 
         [FunctionName("HttpDurableResizePicture_HttpStart")]
         public static async Task<HttpResponseMessage> HttpStart(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post")]HttpRequestMessage req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")]HttpRequestMessage req,
             [OrchestrationClient]DurableOrchestrationClient starter,
             TraceWriter log)
         {
