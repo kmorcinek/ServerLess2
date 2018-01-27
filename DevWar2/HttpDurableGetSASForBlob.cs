@@ -39,7 +39,7 @@ namespace DevWar2
 
         [FunctionName("HttpDurableGetSASForBlob_GetSAS")]
         public static async Task<string> HttpGetSharedAccessSignatureForBlobAsync([ActivityTrigger] string fileName,
-            [Blob("doneorders", FileAccess.Read, Connection = "StorageConnection")]CloudBlobContainer photosContainer, TraceWriter log)
+            [Blob("resized-photos", FileAccess.Read, Connection = "StorageConnection")]CloudBlobContainer photosContainer, TraceWriter log)
         {
             if (string.IsNullOrWhiteSpace(fileName))
                 return String.Empty;
