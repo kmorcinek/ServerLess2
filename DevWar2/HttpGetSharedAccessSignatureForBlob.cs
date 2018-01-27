@@ -19,6 +19,9 @@ namespace DevWar2
             TraceWriter log)
         {
             string fileName = req.Query["fileName"];
+
+            log.Info($"HttpGetSharedAccessSignatureForBlob . fileName is '{fileName}'");
+
             if (string.IsNullOrWhiteSpace(fileName))
                 return new BadRequestResult();
 
