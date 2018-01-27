@@ -12,7 +12,7 @@ namespace DevWar2
     public static class HttpRetrieveOrder
     {
         [FunctionName("HttpRetrieveOrder")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]HttpRequest req,
+        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)]HttpRequest req,
             [Table("Orders", Connection = "StorageConnection")]CloudTable ordersTable, TraceWriter log)
         {
             string fileName = req.Query["fileName"];
