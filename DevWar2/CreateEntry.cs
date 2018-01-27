@@ -51,9 +51,9 @@ namespace DevWar2
 
     public class PhotoOrder : TableEntity
     {
-        //public string CustomerEmail { get; set; }
+        public string CustomerEmail { get; set; }
         public string FileName { get; set; }
-        //public int RequiredHeight { get; set; }
-        //public int RequiredWidth { get; set; }
+        public int RequiredHeight { get; set; }
+        public int RequiredWidth { get; set; }
     }
 }
