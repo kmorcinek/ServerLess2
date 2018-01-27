@@ -14,21 +14,22 @@ namespace FaceSender
     {
         [FunctionName("HttpOrderFormSave")]
         public static IActionResult Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)]HttpRequest req,
-            [Table("Orders", Connection = "StorageConnection")]ICollector<PhotoOrder> ordersTable = null,
-            TraceWriter log = null)
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)]HttpRequest req
+            //[Table("Orders", Connection = "StorageConnection")]ICollector<PhotoOrder> ordersTable = null,
+            ,TraceWriter log = null
+            )
         {
             try
             {
-                string requestBody = new StreamReader(req.Body).ReadToEnd();
-                PhotoOrder orderData = JsonConvert.DeserializeObject<PhotoOrder>(requestBody);
-                orderData.PartitionKey = System.DateTime.UtcNow.DayOfYear.ToString();
-                orderData.RowKey = orderData.FileName;
-                ordersTable.Add(orderData);
+                //string requestBody = new StreamReader(req.Body).ReadToEnd();
+                //PhotoOrder orderData = JsonConvert.DeserializeObject<PhotoOrder>(requestBody);
+                //orderData.PartitionKey = System.DateTime.UtcNow.DayOfYear.ToString();
+                //orderData.RowKey = orderData.FileName;
+                //ordersTable.Add(orderData);
             }
             catch (System.Exception ex)
             {
-                log.Error("Something went wrong", ex);
+                //log.Error("Something went wrong", ex);
                 return new BadRequestObjectResult("Something went wrong");
             }
 
