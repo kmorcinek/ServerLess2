@@ -20,11 +20,13 @@ $(document).ready(function(){
 		$.ajax({
 			type: 'POST',
 			method: 'POST',
-            url: 'http://localhost:7071/api/CreateEntry?name=j',
+            url: 'http://localhost:7071/api/CreateEntry',
 			data: JSON.stringify(data),
 			headers : {
         "Content-Type":"application/x-www-form-urlencoded" },
-			success: function(data, status){
+            success: function (data, status) {
+                console.log(data);
+                console.log("kono");
 			alert("Zgłoszenie dodane pomyślnie");},
 			error: function(data, status) {
 			alert(status);}
