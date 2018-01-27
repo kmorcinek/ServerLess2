@@ -1,48 +1,78 @@
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.WindowsAzure.Storage.Blob;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
 
-namespace DevWar2
+namespace FaceSender
 {
     public static class HttpDurableGetSASForBlob
     {
         [FunctionName("HttpDurableGetSASForBlob")]
-        public static async Task<List<string>> RunOrchestrator(
+        public static async Task<string> RunOrchestrator(
             [OrchestrationTrigger] DurableOrchestrationContext context)
         {
-            var outputs = new List<string>();
+            var resizedPicturesNames = context.GetInput<List<string>>();
 
-            // Replace "hello" with the name of your Durable Activity Function.
-            outputs.Add(await context.CallActivityAsync<string>("HttpDurableGetSASForBlob_Hello", "Tokyo"));
-            outputs.Add(await context.CallActivityAsync<string>("HttpDurableGetSASForBlob_Hello", "Seattle"));
-            outputs.Add(await context.CallActivityAsync<string>("HttpDurableGetSASForBlob_Hello", "London"));
+            var tasks = new Task<string>[resizedPicturesNames.Count];
+            for (int i = 0; i < resizedPicturesNames.Count; i++)
+            {
+                tasks[i] = context.CallActivityAsync<string>(
+                "HttpDurableGetSASForBlob_GetSAS",
+                resizedPicturesNames[i]);
+            }
 
-            // returns ["Hello Tokyo!", "Hello Seattle!", "Hello London!"]
-            return outputs;
+            await Task.WhenAll(tasks);
+
+            string uri = "";
+            foreach (var task in tasks)
+            {
+                uri += task.Result + " ";
+            }
+            return uri;
         }
 
-        [FunctionName("HttpDurableGetSASForBlob_Hello")]
-        public static string SayHello([ActivityTrigger] string name, TraceWriter log)
+        [FunctionName("HttpDurableGetSASForBlob_GetSAS")]
+        public static async Task<string> HttpGetSharedAccessSignatureForBlobAsync([ActivityTrigger] string fileName,
+            [Blob("doneorders", FileAccess.Read, Connection = "StorageConnection")]CloudBlobContainer photosContainer, TraceWriter log)
         {
-            log.Info($"Saying hello to {name}.");
-            return $"Hello {name}!";
+            if (string.IsNullOrWhiteSpace(fileName))
+                return String.Empty;
+
+            var photoBlob = await photosContainer.GetBlobReferenceFromServerAsync(fileName);
+            return GetBlobSasUri(photoBlob);
         }
 
         [FunctionName("HttpDurableGetSASForBlob_HttpStart")]
         public static async Task<HttpResponseMessage> HttpStart(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")]HttpRequestMessage req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post")]HttpRequestMessage req,
             [OrchestrationClient]DurableOrchestrationClient starter,
             TraceWriter log)
         {
-            // Function input comes from the request content.
-            string instanceId = await starter.StartNewAsync("HttpDurableGetSASForBlob", null);
+            var content = req.Content;
+            string jsonContent = content.ReadAsStringAsync().Result;
+            dynamic resizedPicturesNames = JsonConvert.DeserializeObject<List<string>>(jsonContent);
 
-            log.Info($"Started orchestration with ID = '{instanceId}'.");
+            string instanceId = await starter.StartNewAsync("HttpDurableGetSASForBlob", resizedPicturesNames);
 
             return starter.CreateCheckStatusResponse(req, instanceId);
+        }
+
+        static string GetBlobSasUri(ICloudBlob cloudBlob)
+        {
+            SharedAccessBlobPolicy sasConstraints = new SharedAccessBlobPolicy();
+            sasConstraints.SharedAccessStartTime = DateTimeOffset.UtcNow.AddHours(-1);
+            sasConstraints.SharedAccessExpiryTime = DateTimeOffset.UtcNow.AddHours(24);
+            sasConstraints.Permissions = SharedAccessBlobPermissions.List | SharedAccessBlobPermissions.Read;
+
+            string sasToken = cloudBlob.GetSharedAccessSignature(sasConstraints);
+
+            return cloudBlob.Uri + sasToken;
         }
     }
 }
