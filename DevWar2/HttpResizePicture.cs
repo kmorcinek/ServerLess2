@@ -11,7 +11,7 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace FaceSender
+namespace DevWar2
 {
     public static class HttpResizePicture
     {
