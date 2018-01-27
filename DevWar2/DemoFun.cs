@@ -12,7 +12,7 @@ namespace DevWar2
     public static class DemoFun
     {
         [FunctionName("DemoFun")]
-        public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "warsztaty/{id}")]HttpRequest req, TraceWriter log)
+        public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "warsztaty/{id}")]HttpRequest req, TraceWriter log)
         {
             log.Info("C# HTTP trigger function processed a request.");
 
