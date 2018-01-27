@@ -8,13 +8,13 @@ using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace FaceSender
+namespace DevWar2
 {
     public static class HttpOrderFormSave
     {
         [FunctionName("HttpOrderFormSave")]
         public static IActionResult Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)]HttpRequest req
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]HttpRequest req
             //[Table("Orders", Connection = "StorageConnection")]ICollector<PhotoOrder> ordersTable = null,
             ,TraceWriter log = null
             )

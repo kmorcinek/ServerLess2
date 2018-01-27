@@ -12,19 +12,37 @@ namespace DevWar2
     public static class CreateEntry
     {
         [FunctionName("CreateEntry")]
-        public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)]HttpRequest req, TraceWriter log)
+        public static IActionResult Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)]HttpRequest req,
+            TraceWriter log)
         {
             log.Info("C# HTTP trigger function processed a request.");
 
-            string name = req.Query["name"];
+            try
+            {
+                //string requestBody = new StreamReader(req.Body).ReadToEnd();
+                //PhotoOrder orderData = JsonConvert.DeserializeObject<PhotoOrder>(requestBody);
+                //orderData.PartitionKey = System.DateTime.UtcNow.DayOfYear.ToString();
+                //orderData.RowKey = orderData.FileName;
+                //ordersTable.Add(orderData);
+            }
+            catch (System.Exception ex)
+            {
+                //log.Error("Something went wrong", ex);
+                return new BadRequestObjectResult("Something went wrong");
+            }
 
-            string requestBody = new StreamReader(req.Body).ReadToEnd();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            return (ActionResult)new OkObjectResult($"Order processed");
 
-            return name != null
-                ? (ActionResult)new OkObjectResult($"Hello, {name}")
-                : new BadRequestObjectResult("Please pass a name on the query string or in the request body");
+            //string name = req.Query["name"];
+
+            //string requestBody = new StreamReader(req.Body).ReadToEnd();
+            //dynamic data = JsonConvert.DeserializeObject(requestBody);
+            //name = name ?? data?.name;
+
+            //return name != null
+            //    ? (ActionResult)new OkObjectResult($"Hello, {name}")
+            //    : new BadRequestObjectResult("Please pass a name on the query string or in the request body");
         }
     }
 }
