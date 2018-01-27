@@ -11,7 +11,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using DevWar2;
 
-namespace FaceSender
+namespace DevWar2
 {
     public static class HttpDurableResizePicture
     {
