@@ -51,14 +51,8 @@ pattern="[a-zA-Z0-9_]{1,}[.]{1}(jpg|jpeg|png|bmp){1}$"
        value="plikName">
 </div>
 <div class="form-group">
-<label for="inputWidth">Szerokość:</label>
-<input type="number" class="form-control" id="inputWidth" name="RequiredWidth" aria-describedby="inputWidthHelp" placeholder="Wprowadź oczekiwaną szerokość" required min="1"
-       value="5">
-</div>
-<div class="form-group">
-<label for="inputHeight">Wysokość:</label>
-<input type="number" class="form-control" id="inputHeight" name="RequiredHeight" aria-describedby="inputHeightHelp" placeholder="Wprowadź oczekiwaną wysokość" required min="1"
-       value="4">
+    <label for="inputWidth">Rozdzielczość:</label>
+    <input type="text" class="form-control" id="inputRes" name="Resolutions" aria-describedby="resolutionsHelp" placeholder="Wprowadź oczekiwaną rozdzielczności" required value="11x16">
 </div>
 </form>
 <button class="btn btn-primary" style="float:right;">Zapisz</button>
