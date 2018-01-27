@@ -9,6 +9,7 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using DevWar2;
 
 namespace FaceSender
 {
@@ -41,7 +42,7 @@ namespace FaceSender
         [FunctionName("HttpDurableResizePicture_ResizePicture")]
         public static async Task<string> ResizePicture([ActivityTrigger] PictureResizeRequest pictureResizeRequest,
             [Blob("photos", FileAccess.Read, Connection = "StorageConnection")]CloudBlobContainer photosContainer,
-            [Blob("doneorders/{rand-guid}", FileAccess.ReadWrite, Connection = "StorageConnection")]ICloudBlob resizedPhotoCloudBlob,
+            [Blob("resized-photos/{rand-guid}", FileAccess.ReadWrite, Connection = "StorageConnection")]ICloudBlob resizedPhotoCloudBlob,
             TraceWriter log)
         {
             var photoStream = await GetSourcePhotoStream(photosContainer, pictureResizeRequest.FileName);
