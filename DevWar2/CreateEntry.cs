@@ -5,6 +5,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 
 namespace DevWar2
@@ -46,5 +47,13 @@ namespace DevWar2
             //    ? (ActionResult)new OkObjectResult($"Hello, {name}")
             //    : new BadRequestObjectResult("Please pass a name on the query string or in the request body");
         }
+    }
+
+    public class PhotoOrder : TableEntity
+    {
+        //public string CustomerEmail { get; set; }
+        public string FileName { get; set; }
+        //public int RequiredHeight { get; set; }
+        //public int RequiredWidth { get; set; }
     }
 }
